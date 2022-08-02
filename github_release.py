@@ -37,8 +37,9 @@ def send_hash(pkg_hash, name, version, account, namespace, api_token):
     key = '{0}_{1}_{2}'.format(UPDATER_PREFIX, version, name)
     headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + api_token,
+        "Authorization": f"Bearer {api_token}",
     }
+
     response = requests.put(
             BASE_KV_URL + account + "/storage/kv/namespaces/" + namespace + "/values/" + key,
             headers=headers,
@@ -57,7 +58,7 @@ def assert_tag_exists(repo, version):
     """ Raise exception if repo does not contain a tag matching version """
     tags = repo.get_tags()
     if not tags or tags[0].name != version:
-        raise Exception("Tag {} not found".format(version))
+        raise Exception(f"Tag {version} not found")
 
 
 def get_or_create_release(repo, version, dry_run=False):
@@ -85,7 +86,7 @@ def get_or_create_release(repo, version, dry_run=False):
     except GithubException as e:
         errors = e.data.get("errors", [])
         if e.status == 422 and any(
-            [err.get("code") == GITHUB_CONFLICT_CODE for err in errors]
+            err.get("code") == GITHUB_CONFLICT_CODE for err in errors
         ):
             logging.warning(
                 "Conflict: Release was likely just made by a different build: %s",

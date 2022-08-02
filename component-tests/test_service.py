@@ -27,7 +27,7 @@ def default_config_file():
 
 class TestServiceMode:
     @select_platform("Darwin")
-    @pytest.mark.skipif(os.path.exists(default_config_file()), reason=f"There is already a config file in default path")
+    @pytest.mark.skipif(os.path.exists(default_config_file()), reason="There is already a config file in default path")
     def test_launchd_service_log_to_file(self, tmp_path, component_tests_config):
         log_file = tmp_path / test_logging.default_log_file
         additional_config = {
@@ -44,7 +44,7 @@ class TestServiceMode:
         self.launchd_service_scenario(config, assert_log_file)
 
     @select_platform("Darwin")
-    @pytest.mark.skipif(os.path.exists(default_config_file()), reason=f"There is already a config file in default path")
+    @pytest.mark.skipif(os.path.exists(default_config_file()), reason="There is already a config file in default path")
     def test_launchd_service_rotating_log(self, tmp_path, component_tests_config):
         log_dir = tmp_path / "logs"
         additional_config = {
@@ -72,8 +72,7 @@ class TestServiceMode:
         self.launchctl_cmd("list", success=False)
 
     @select_platform("Linux")
-    @pytest.mark.skipif(os.path.exists("/etc/cloudflared/config.yml"),
-                        reason=f"There is already a config file in default path")
+    @pytest.mark.skipif(os.path.exists("/etc/cloudflared/config.yml"), reason="There is already a config file in default path")
     def test_sysv_service_log_to_file(self, tmp_path, component_tests_config):
         log_file = tmp_path / test_logging.default_log_file
         additional_config = {
@@ -88,8 +87,7 @@ class TestServiceMode:
         self.sysv_service_scenario(config, tmp_path, assert_log_file)
 
     @select_platform("Linux")
-    @pytest.mark.skipif(os.path.exists("/etc/cloudflared/config.yml"),
-                        reason=f"There is already a config file in default path")
+    @pytest.mark.skipif(os.path.exists("/etc/cloudflared/config.yml"), reason="There is already a config file in default path")
     def test_sysv_service_rotating_log(self, tmp_path, component_tests_config):
         log_dir = tmp_path / "logs"
         additional_config = {
@@ -120,9 +118,15 @@ class TestServiceMode:
     @contextmanager
     def run_service(self, tmp_path, config, root=False):
         try:
-            service = start_cloudflared(
-                tmp_path, config, cfd_args=["service", "install"], cfd_pre_args=[], capture_output=False, root=root)
-            yield service
+            yield start_cloudflared(
+                tmp_path,
+                config,
+                cfd_args=["service", "install"],
+                cfd_pre_args=[],
+                capture_output=False,
+                root=root,
+            )
+
         finally:
             start_cloudflared(
                 tmp_path, config, cfd_args=["service", "uninstall"], cfd_pre_args=[], capture_output=False, root=root)

@@ -50,7 +50,7 @@ def create_tunnel(config, origincert_path, random_uuid):
     except OSError:
         pass
 
-    tunnel_name = "cfd_component_test-" + random_uuid
+    tunnel_name = f"cfd_component_test-{random_uuid}"
     create_cmd = [config["cloudflared_binary"], "tunnel", "--origincert", origincert_path, "create",
                   "--credentials-file", credentials_path, tunnel_name]
     LOGGER.info(f"Creating tunnel with {create_cmd}")
@@ -82,13 +82,13 @@ def create_dns(config, hostname, type, content):
 
 
 def create_classic_dns(config, random_uuid):
-    classic_hostname = "classic-" + random_uuid + "." + config["zone_domain"]
+    classic_hostname = f"classic-{random_uuid}." + config["zone_domain"]
     create_dns(config, classic_hostname, "AAAA", "fd10:aec2:5dae::")
     return classic_hostname
 
 
 def create_named_dns(config, random_uuid):
-    hostname = "named-" + random_uuid + "." + config["zone_domain"]
+    hostname = f"named-{random_uuid}." + config["zone_domain"]
     create_dns(config, hostname, "CNAME", config["tunnel"] + ".cfargotunnel.com")
     return hostname
 

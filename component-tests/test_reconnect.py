@@ -18,7 +18,7 @@ class TestReconnect:
         "stdin-control": True,
     }
 
-    @pytest.mark.skipif(platform.system() == "Windows", reason=f"Currently buggy on Windows TUN-4584")
+    @pytest.mark.skipif(platform.system() == "Windows", reason="Currently buggy on Windows TUN-4584")
     def test_named_reconnect(self, tmp_path, component_tests_config):
         config = component_tests_config(self.extra_config)
         with start_cloudflared(tmp_path, config, new_process=True, allow_input=True, capture_output=False) as cloudflared:

@@ -36,11 +36,7 @@ class TestSSHBase(unittest.TestCase):
             cls.AUTHORIZED_KEYS_SSH_CONFIG,
             cls.SSH_TARGET,
         ]
-        if not pty:
-            cmd += ["-T"]
-        else:
-            cmd += ["-tt"]
-
+        cmd += ["-tt"] if pty else ["-T"]
         return cmd
 
     @classmethod
